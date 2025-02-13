@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move package &apos;Exercicos&apos; to &apos;courseOrientacaoObejto/src/entites&apos;&#x0D;&#x0A;- Original project: &apos;courseArea&apos;&#x0D;&#x0A;- Destination element: &apos;courseOrientacaoObejto/src/entites&apos;&#x0D;&#x0A;- Original element: &apos;courseArea/src/Exercicos&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move package" destination="=courseOrientacaoObejto/src&lt;entites" element1="/src&lt;Exercicos" flags="589830" fragments="1" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.movePackages" stamp="1718368667810" version="1.0"/>
+</session>

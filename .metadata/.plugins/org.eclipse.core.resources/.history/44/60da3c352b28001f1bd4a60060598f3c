@@ -1,0 +1,44 @@
+package br.com.qwasolucoes.mentoria.testes.logica_programacao;
+
+import br.com.qwasolucoes.mentoria.implementacoes.logica_programacao.LogicaProgramacaoProvider;
+import br.com.qwasolucoes.mentoria.interfaces.logica_programacao.LogicaProgramacao;
+
+public class LogicaProgramacaoTest {
+	
+	public static void main(String[] args) {
+		System.out.println("nome");
+		
+		LogicaProgramacao logica_Programacao = new LogicaProgramacaoProvider();
+		
+		String nome = "Maria";
+		String sobreNome = "Joana";
+		byte dataNascimento = 10/02/2013;
+		char sexo = 'F';
+		String profissao = "aux";
+		long cpf = 1521645957;
+		String escolaridade = "Ensino medio";
+		int Idade = 32;
+		double risco;
+		double taxa;
+		
+		if (Idade <= 18) {
+			System.out.println("MENOR_IDADE");
+	        taxa = 0.20;
+	    } else if (Idade <= 23) {
+	    	System.out.println("RISCO_ALTO:");
+	        taxa = 0.15;
+	    } else if (Idade <= 31) {
+	    	System.out.println("RISCO_BAIXO");
+	        taxa = 0.10;
+	    } else if (Idade <= 50) {
+	    	System.out.println("ESPECIAL");
+	        taxa = 0.05;
+	    } else {
+	        taxa = 0.01;
+	    }
+		
+		
+		
+	}
+
+}

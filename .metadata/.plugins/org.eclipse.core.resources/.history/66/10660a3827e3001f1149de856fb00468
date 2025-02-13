@@ -1,0 +1,25 @@
+package Exercicio;
+
+import java.util.Scanner;
+
+public class Program {
+
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		Pessoa pessoa1 = new Pessoa();
+		
+		pessoa1.nome = sc.nextLine();
+		pessoa1.idade = sc.nextInt();
+		pessoa1.altura = sc.nextDouble();
+		
+		pessoa1.exibirInformacoes();
+		
+		
+		sc.close();
+		
+		
+	}
+
+}

@@ -1,0 +1,25 @@
+package ExercicioContaBancaria;
+
+import java.util.Scanner;
+
+public class Program {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Informe o numero da sua conta: ");
+		
+		int conta = sc.nextInt();
+		System.out.print("Informe seu nome: ");
+		String nome = sc.nextLine();
+		System.out.println("Deseja realizar um depoisto (s/n)");
+		double saldo = sc.nextDouble();
+		
+		
+		Conta contaC = new Conta( conta, nome, saldo);
+		
+		System.out.println(contaC.toString());
+		
+		
+		sc.close();
+		
+	}
+}

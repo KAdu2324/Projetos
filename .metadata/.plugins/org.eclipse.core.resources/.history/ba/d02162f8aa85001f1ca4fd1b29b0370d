@@ -1,0 +1,9 @@
+package br.com.qwasolucoes.mentoria.implementacoes.web;
+
+public class Cenario {
+	
+	public static void main(String[] args) {
+	 CadastroProvider relacionar = new CadastroProvider();
+	 relacionar.cadastrar();
+	}
+}

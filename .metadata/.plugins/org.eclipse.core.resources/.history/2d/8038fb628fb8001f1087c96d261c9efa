@@ -1,0 +1,12 @@
+package PolimorfismoExercicio_novo2;
+
+public class Main {
+	public static void main(String[] args) {
+		Carro c = new Carro();
+		Caminhao d = new Caminhao();
+		Moto m = new Moto();
+		System.out.println(c);
+		System.out.println(d);
+		System.out.println(m);
+	}
+}

@@ -1,0 +1,38 @@
+package ExercicioAltura;
+
+import java.util.Scanner;
+
+public class Program {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Qauntos numeros voce vai digitar? ");
+		int n = sc.nextInt();
+		Pessoa[] listaPessoas = new Pessoa[n];
+
+		for (int i = 0; i < listaPessoas.length; i++) {
+			int numerooPessoa = i + 1;
+			System.out.println("Dados da" + numerooPessoa + " pessoa: ");
+		}
+		double somaAltura = 0.0;
+
+		for (int i = 0; i < n; i++) {
+			somaAltura += listaPessoas[i].getAltura();
+		}
+
+		double alturaMedia = somaAltura / n;
+
+		System.out.printf("altura media: %.2f%n", alturaMedia);
+		for(int i=0; i<listaPessoas.length; i++) {
+			
+			if(listaPessoas[i].getIdade() < 16) {
+				System.out.printf("%s\n", listaPessoas[i].getNome());
+			}
+			
+			  System.out.printf("Pessoas com menos de 16 anos: %.1f%%\n");
+		}
+
+		sc.close();
+	}
+
+}

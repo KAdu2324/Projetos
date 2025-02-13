@@ -1,0 +1,38 @@
+package ExercicioContaBancaria;
+
+import java.util.Scanner;
+
+public class Program {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		Conta conta;
+		
+		
+		System.out.print("Informe o numero da sua conta: ");
+		int contaCliente = sc.nextInt();
+		
+		System.out.print("Informe seu nome: ");
+		sc.nextLine();
+		String nome = sc.nextLine();
+		
+		System.out.println("Deseja realizar um depoisto (s/n)");
+		char resposta = sc.next().charAt(0);
+		
+		if(resposta == 's') {
+			System.out.print("Informe o valor do deposito: ");
+			double inicioDeposito = sc.nextDouble();
+			conta = new Conta( contaCliente, nome, inicioDeposito);
+		} else {
+			conta = new Conta(contaCliente, nome);
+		}
+		System.out.println();
+		System.out.println("Dados da conta: " +  conta.toString());
+		
+	
+		
+		
+		
+		sc.close();
+		
+	}
+}

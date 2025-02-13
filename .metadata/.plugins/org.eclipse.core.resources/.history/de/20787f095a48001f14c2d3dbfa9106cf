@@ -1,0 +1,945 @@
+package br.com.qwasolucoes.mentoria.implementacoes.logica_programacao;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import br.com.qwasolucoes.mentoria.implementacoes.logica_programacao.model.Pessoa;
+import br.com.qwasolucoes.mentoria.interfaces.logica_programacao.LogicaProgramacao;
+import br.com.qwasolucoes.mentoria.model.Funcionario;
+
+public class LogicaProgramacaoProvider implements LogicaProgramacao {
+
+	@Override
+	public List<Funcionario> conversaoStringParaPessoa(List<String> lista) {
+
+		return null;
+
+	}
+
+	@Override
+	public List<String> conversaoPessoaParaString(List<Funcionario> pessoas) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Funcionario conversaoArrayParaPessoa(String[] array) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Funcionario> conversaoArrayMultidimensionalParaPessoa(String[][] arrayMultidimensional) {
+
+		 List<Funcionario> listaDeFuncionarios = new ArrayList<>();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	        for (String[] entrada : arrayMultidimensional) {
+	            Funcionario funcionario = new Funcionario();
+	            funcionario.setNome(entrada[0]);
+	            funcionario.setSobrenome(entrada[1]);
+	            LocalDate dataNascimento = LocalDate.parse(entrada[2], formatter);
+	            //funcionario.setDataNascimento(dataNascimento);
+	            funcionario.setSexo(entrada[3]);
+	            funcionario.setProfissao(entrada[4]);
+	            funcionario.setCpfCnpj(entrada[5]);
+	            funcionario.setEscolaridade(entrada[6]);
+	            //funcionario.setSalario(Double.parseDouble(entrada[7]));
+
+				/*
+				 * int idade = calcularRisco(dataNascimento); funcionario.setIdade(idade);
+				 * funcionario.setMaiorIdade(idade >= 18);
+				 */
+	            //funcionario.setRisco(calcularRisco(idade));
+	            //funcionario.setTaxa(calcularTaxa(idade, funcionario.getSalario()));
+
+	            listaDeFuncionarios.add(funcionario);
+	        }
+
+	        return listaDeFuncionarios;
+	    }
+		
+	public static String calcularRisco(int idade) {
+		if (idade <= 18) {
+			return "MENOR_IDADE";
+		} else if (idade <= 24) {
+			return "RISCO_ALTO";
+		} else if (idade <= 32) {
+			return "RISCO_MODERADO";
+		} else if (idade <= 50) {
+			return "RISCO_BAIXO";
+		} else {
+			return "ESPECIAL";
+		}
+	}
+
+	public static double calcularTaxa(int idade, double salario) {
+		double taxa = 0;
+		if (idade <= 18) {
+			taxa = 0.20;
+		} else if (idade <= 24) {
+			taxa = 0.15;
+		} else if (idade <= 32) {
+			taxa = 0.10;
+		} else if (idade <= 50) {
+			taxa = 0.05;
+		} else {
+			taxa = 0.01;
+		}
+		return salario * taxa;
+	}
+
+	@Override
+	public int[][] arrayMultidimensionalParesImparesPrimosResto(int[] array, int numeroDivisaoResto) {
+		List<Integer> pares = new ArrayList<>();
+		List<Integer> impares = new ArrayList<>();
+		List<Integer> primos = new ArrayList<>();
+		List<Integer> restos = new ArrayList<>();
+
+		for (int valor : array) {
+			if (valor % 2 == 0) {
+				pares.add(valor);
+			} else {
+				impares.add(valor);
+			}
+
+			if (isPrimo(valor)) {
+				primos.add(valor);
+			}
+
+			restos.add(valor % numeroDivisaoResto);
+		}
+
+		int[] paresArray = pares.stream().mapToInt(Integer::intValue).toArray();
+		int[] imparesArray = impares.stream().mapToInt(Integer::intValue).toArray();
+		int[] primosArray = primos.stream().mapToInt(Integer::intValue).toArray();
+		int[] restosArray = restos.stream().mapToInt(Integer::intValue).toArray();
+
+		int maxSize = Math.max(Math.max(paresArray.length, imparesArray.length),
+				Math.max(primosArray.length, restosArray.length));
+
+		int[][] resultado = new int[maxSize][4];
+
+		for (int i = 0; i < maxSize; i++) {
+			if (i < paresArray.length)
+				resultado[i][0] = paresArray[i];
+			if (i < imparesArray.length)
+				resultado[i][1] = imparesArray[i];
+			if (i < primosArray.length)
+				resultado[i][2] = primosArray[i];
+			if (i < restosArray.length)
+				resultado[i][3] = restosArray[i];
+		}
+		System.out.println("Coluna 0 - Valores Pares: " + paresArray[0]);
+		System.out.println("Coluna 1 - Valores Ímpares: " + imparesArray[1]);
+		System.out.println("Coluna 2 - Valores Primos: " + primosArray[2]);
+		System.out.println("Coluna 3 - Resto da Divisão: " + restosArray[3]);
+
+		return resultado;
+	}
+
+	private boolean isPrimo(int numero) {
+		if (numero <= 1)
+			return false;
+		if (numero <= 3)
+			return true;
+		if (numero % 2 == 0 || numero % 3 == 0)
+			return false;
+		for (int i = 5; i * i <= numero; i += 6) {
+			if (numero % i == 0 || numero % (i + 2) == 0)
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String[] arrayMultidimensionalPorPosicoes(String[][] arrayMultidimensional, int coluna, int linha) {
+
+		int numLinhas = arrayMultidimensional.length;
+		int numColunas = arrayMultidimensional[linha].length;
+
+		String[] resultado = new String[4];
+
+		if (coluna > 0) {
+			resultado[0] = arrayMultidimensional[linha][coluna - 1];
+		} else {
+			resultado[0] = "";
+		}
+		if (coluna < numColunas - 1) {
+			resultado[1] = arrayMultidimensional[linha][coluna + 1];
+		} else {
+			resultado[1] = "";
+		}
+
+		if (linha > 0) {
+			resultado[2] = arrayMultidimensional[linha - 1][coluna];
+		} else {
+			resultado[2] = "";
+		}
+
+		if (linha < numLinhas - 1) {
+			resultado[3] = arrayMultidimensional[linha + 1][coluna];
+		} else {
+			resultado[3] = "";
+		}
+		System.out.println("antecessor da posição: " + resultado[0]);
+		System.out.println("antecessor da posição: " + resultado[1]);
+		System.out.println("antecessor da posição: " + resultado[2]);
+		System.out.println("antecessor da posição: " + resultado[3]);
+
+		return resultado;
+	}
+
+	@Override
+	public String[] arrayMultidimensionalPorValor(String[][] arrayMultidimensional, String valor) {
+
+		int linhas = arrayMultidimensional.length;
+		int colunas = arrayMultidimensional[0].length;
+
+		int linhaPosi = -1;
+		int colunaPosi = -1;
+
+		for (int i = 0; i < linhas; i++) {
+			for (int j = 0; j < colunas; j++) {
+				if (arrayMultidimensional[i][j].equals(valor)) {
+					linhaPosi = i;
+					colunaPosi = j;
+					break;
+				}
+			}
+			if (linhaPosi != -1) {
+				break;
+			}
+		}
+
+		String[] resultado = new String[4];
+
+		if (colunaPosi > 0) {
+			resultado[0] = arrayMultidimensional[linhaPosi][colunaPosi - 1];
+		} else {
+			resultado[0] = "sem posição";
+		}
+
+		if (colunaPosi < colunas - 1) {
+			resultado[1] = arrayMultidimensional[linhaPosi][colunaPosi + 1];
+		} else {
+			resultado[1] = "sem posição";
+		}
+
+		if (linhaPosi > 0) {
+			resultado[2] = arrayMultidimensional[linhaPosi - 1][colunaPosi];
+		} else {
+			resultado[2] = "sem posição";
+		}
+
+		if (linhaPosi < linhas - 1) {
+			resultado[3] = arrayMultidimensional[linhaPosi + 1][colunaPosi];
+		} else {
+			resultado[3] = "sem posição";
+		}
+
+		for (String res : resultado) {
+			System.out.println(res);
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public String[] antecessorSucessorPor(String[] array, int posicao) {
+
+		String[] resultado = new String[2];
+
+		if (posicao < 0 || posicao >= array.length) {
+			throw new IllegalArgumentException("Posição inválida no array");
+		}
+
+		String valor = array[posicao];
+
+		String antecessor = null;
+		String sucessor = null;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i].equals(valor)) {
+				if (i > 0) {
+					antecessor = array[i - 1];
+				}
+				if (i < array.length - 1) {
+					sucessor = array[i + 1];
+				}
+				break;
+			}
+		}
+
+		resultado[0] = antecessor;
+		resultado[1] = sucessor;
+		System.out.println("Antecessor: " + resultado[0]);
+		System.out.println("Sucessor: " + resultado[1]);
+
+		return resultado;
+	}
+
+	@Override
+	public String[] antecessorSucessorPor(String[] array, String valor) {
+		String[] resultado = new String[2];
+
+		for (int i = 0; i < array.length; i++) {
+			if (array[i].equals(valor)) {
+				if (i > 0) {
+					resultado[0] = array[i - 1];
+				} else {
+					resultado[0] = null;
+				}
+
+				if (i < array.length - 1) {
+					resultado[1] = array[i + 1];
+				} else {
+					resultado[1] = null;
+				}
+				break;
+			}
+		}
+		System.out.println("Antecessor: " + resultado[0]);
+		System.out.println("Sucessor: " + resultado[1]);
+
+		return resultado;
+	}
+
+	@Override
+	public List<Integer> numerosPares(Integer limite) {
+
+		List<Integer> resultado = new ArrayList<>();
+
+		for (int i = 0; i <= limite; i++) {
+			if (i % 2 == 0) {
+				{
+					resultado.add(i);
+				}
+			}
+
+		}
+		return resultado;
+	}
+
+	@Override
+	public List<Integer> numerosImpares(Integer limite) {
+
+		List<Integer> resultado = new ArrayList<>();
+
+		for (int i = 0; i <= limite; i++) {
+			if (i % 2 != 0) {
+				{
+					resultado.add(i);
+				}
+			}
+
+		}
+		return resultado;
+	}
+
+	@Override
+	public List<Integer> numerosPrimos(Integer limite) {
+
+		List<Integer> resultado = new ArrayList<>();
+
+		for (int i = 2; i <= limite; i++) {
+			if (numeroPrimo(i)) {
+				resultado.add(i);
+			}
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public int[] numerosParesArray(Integer limite) {
+		int contador = 0;
+		for (int i = 1; i <= limite; i++) {
+			if (i % 2 == 0) {
+				contador++;
+			}
+		}
+		int[] numerosParesArray = new int[contador];
+		contador = 0;
+		for (int i = 1; i <= limite; i++) {
+			if (i % 2 == 0) {
+				numerosParesArray[contador] = i;
+				contador++;
+			}
+		}
+
+		return numerosParesArray;
+	}
+
+	@Override
+	public int[] numerosImparesArray(Integer limite) {
+		int contador = 0;
+		for (int i = 1; i <= limite; i++) {
+			if (i % 2 != 0) {
+				contador++;
+			}
+		}
+		int[] numerosImparesArray = new int[contador];
+		contador = 0;
+		for (int i = 1; i <= limite; i++) {
+			if (i % 2 != 0) {
+				numerosImparesArray[contador] = i;
+				contador++;
+			}
+		}
+
+		return numerosImparesArray;
+	}
+
+	@Override
+	public int[] numerosPrimosArray(Integer limite) {
+
+		int[] numerosPrimosArray = new int[limite];
+		int contar = 0;
+
+		for (int i = 0; i < limite; i++) {
+			numerosPrimosArray[i] = i;
+		}
+		for (int i = 2; i <= limite; i++) {
+			boolean numeroPrimo = true;
+			for (int j = 2; j <= Math.sqrt(i); j++) {
+				if (i % j == 0) {
+					numeroPrimo = false;
+					break;
+				}
+			}
+			if (numeroPrimo) {
+				numerosPrimosArray[contar] = i;
+				contar++;
+			}
+
+		}
+
+		int[] resultado = Arrays.copyOf(numerosPrimosArray, contar);
+		System.out.println(Arrays.toString(resultado));
+		return resultado;
+
+	}
+
+	@Override
+	public int[] primeiraUltimaPosicaoArray(Integer limite) {
+
+		int[] primeiraUltimaPosicao = new int[limite];
+
+		int primeiro = primeiraUltimaPosicao[0];
+		int ultimo = primeiraUltimaPosicao[limite - 1];
+
+		for (int i = 0; i < limite; i++) {
+			primeiraUltimaPosicao[i] = i;
+		}
+		System.out.printf("Primeiro: %d.%nUltimo: %d.%n", primeiro, ultimo);
+		return primeiraUltimaPosicao;
+
+	}
+
+	@Override
+	public int[] quantidadeParesImparesPrimos(List<Integer> valores) {
+
+		int[] contadores = new int[3];
+
+		for (int valor : valores) {
+			if (valor % 2 == 0) {
+				contadores[0]++;
+			} else {
+				contadores[1]++;
+			}
+
+			if (numeroPrimo(valor)) {
+				contadores[2]++;
+			}
+		}
+		System.out.printf("Pares: %d Ímpares: %d Primos: %d \n", contadores[0], contadores[1], contadores[2]);
+
+		return contadores;
+	}
+
+	public boolean numeroPrimo(int numero) {
+		if (numero <= 1) {
+			return false;
+		}
+		if (numero == 2) {
+			return true;
+		}
+		if (numero % 2 == 0) {
+			return false;
+		}
+		for (int i = 3; i <= Math.sqrt(numero); i += 2) {
+			if (numero % i == 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public int[] primeiraUltimaMediaPosicaoArray(Integer limite) {
+
+		int[] primeiraUltimaPosicao = new int[limite];
+		for (int i = 0; i < limite; i++) {
+			primeiraUltimaPosicao[i] = i;
+		}
+		int primeiro = primeiraUltimaPosicao[0];
+		int ultimo = primeiraUltimaPosicao[limite - 1];
+		int soma = 0;
+
+		for (int valor : primeiraUltimaPosicao) {
+			soma += valor;
+		}
+		int media = soma / limite;
+		System.out.printf("Primeiro: %d.%nUltimo: %d.%nMédia: %d.%n", primeiro, ultimo, media);
+		return primeiraUltimaPosicao;
+
+	}
+
+	@Override
+	public List<Integer> removerInteirosDuplicados(List<Integer> numeros) {
+		Set<Integer> valorUnicos = new HashSet<>();
+		Set<Integer> valorDuplicados = new HashSet<>();
+
+		for (Integer nome : numeros) {
+			if (!valorUnicos.add(nome)) {
+				valorDuplicados.add(nome);
+			}
+		}
+
+		List<Integer> resultado = new ArrayList<>(valorUnicos);
+		resultado.removeAll(valorDuplicados);
+
+		return resultado;
+	}
+
+	@Override
+	public List<BigDecimal> removerValoresDuplicados(List<BigDecimal> numeros) {
+
+		Set<BigDecimal> valorUnicos = new HashSet<>();
+		Set<BigDecimal> valorDuplicados = new HashSet<>();
+
+		for (BigDecimal nome : numeros) {
+			if (!valorUnicos.add(nome)) {
+				valorDuplicados.add(nome);
+			}
+		}
+
+		List<BigDecimal> resultado = new ArrayList<>(valorUnicos);
+		resultado.removeAll(valorDuplicados);
+
+		return resultado;
+	}
+
+	@Override
+	public List<String> removerTextosDuplicados(List<String> textos) {
+
+		Set<String> textoUnicos = new HashSet<>();
+		Set<String> textoDuplicados = new HashSet<>();
+
+		for (String nome : textos) {
+			if (!textoUnicos.add(nome)) {
+				textoDuplicados.add(nome);
+			}
+		}
+
+		List<String> resultado = new ArrayList<>(textoUnicos);
+		resultado.removeAll(textoDuplicados);
+
+		return resultado;
+	}
+
+	@Override
+	public Integer valorInteiroMaiorQtdDuplicados(List<Integer> numeros) {
+
+		Map<Integer, Integer> listaDuplicado = new TreeMap<>();
+		for (Integer numero : numeros) {
+			listaDuplicado.put(numero, listaDuplicado.getOrDefault(numero, 0) + 1);
+		}
+
+		Integer numeroMaiorQtdDuplicados = null;
+		int maiorQtd = 0;
+		for (Map.Entry<Integer, Integer> entry : listaDuplicado.entrySet()) {
+			if (entry.getValue() > 1 && entry.getValue() > maiorQtd) {
+				maiorQtd = entry.getValue();
+				numeroMaiorQtdDuplicados = entry.getKey();
+			}
+		}
+
+		return numeroMaiorQtdDuplicados;
+	}
+
+	@Override
+	public String valorTextoMaiorQtdDuplicados(List<String> textos) {
+
+		List<String> inteirosDuplicados = new ArrayList<>();
+		Map<String, Integer> maiorDuplicado = new TreeMap<>();
+		for (String duplicado : textos) {
+			if (!maiorDuplicado.containsKey(duplicado)) {
+				maiorDuplicado.put(duplicado, 0);
+			}
+			maiorDuplicado.put(duplicado, maiorDuplicado.get(duplicado) + 1);
+		}
+
+		for (Map.Entry<String, Integer> entry : maiorDuplicado.entrySet()) {
+			if (entry.getValue() > 1) {
+				inteirosDuplicados.add(entry.getKey());
+
+			}
+		}
+
+		return inteirosDuplicados.toString();
+
+	}
+
+	@Override
+	public List<Integer> listaInteirosDuplicados(List<Integer> numeros) {
+
+		List<Integer> inteirosDuplicados = new ArrayList<>();
+		Map<Integer, Integer> listaDuplicado = new TreeMap<Integer, Integer>();
+		for (Integer lista : numeros) {
+			if (!listaDuplicado.containsKey(lista)) {
+				listaDuplicado.put(lista, 0);
+			}
+			listaDuplicado.put(lista, listaDuplicado.get(lista) + 1);
+		}
+		for (Map.Entry<Integer, Integer> entry : listaDuplicado.entrySet())
+			if (entry.getValue() > 1) {
+				inteirosDuplicados.add(entry.getKey());
+			}
+
+		return inteirosDuplicados;
+	}
+
+	@Override
+	public List<BigDecimal> listaDecimalDuplicados(List<BigDecimal> textos) {
+
+		List<BigDecimal> numerosDuplicados = new ArrayList<>();
+		Map<BigDecimal, Integer> comparaNumeros = new TreeMap<BigDecimal, Integer>();
+
+		for (BigDecimal numeros : textos) {
+			if (!comparaNumeros.containsKey(numeros)) {
+				comparaNumeros.put(numeros, 0);
+			}
+			comparaNumeros.put(numeros, comparaNumeros.get(numeros) + 1);
+		}
+		for (Map.Entry<BigDecimal, Integer> entry : comparaNumeros.entrySet()) {
+			if (entry.getValue() > 1) {
+				numerosDuplicados.add(entry.getKey());
+			}
+
+		}
+		return numerosDuplicados;
+
+	}
+
+	@Override
+	public List<String> listaTextoDuplicados(List<String> textos) {
+
+		List<String> textoDuplicados = new ArrayList<>();
+		Map<String, Integer> compararLista = new TreeMap<String, Integer>();
+
+		for (String nomes : textos) {
+
+			if (!compararLista.containsKey(nomes)) {
+				compararLista.put(nomes, 0);
+			}
+			compararLista.put(nomes, compararLista.get(nomes) + 1);
+
+		}
+		for (Map.Entry<String, Integer> entry : compararLista.entrySet()) {
+
+			if (entry.getValue() > 1) {
+				textoDuplicados.add(entry.getKey());
+			}
+			System.out.printf("O nome %s se repete: %d vez(s). %n", entry.getKey(), entry.getValue());
+
+		}
+
+		return textoDuplicados;
+
+	}
+
+	@Override
+
+	public Integer somarValores(Integer limite) {
+
+		int soma = limite;
+
+		for (int i = 1; i <= limite; i++) {
+
+			if (2 != 0) {
+
+				soma = i * limite;
+
+			}
+
+		}
+
+		return soma;
+
+	}
+
+	@Override
+
+	public Integer somarValoresPares(Integer limite) {
+
+		int resultado = limite;
+
+		for (int i = 0; i <= limite; i++) {
+
+			if (i % 2 == 0) {
+
+				resultado += i * limite;
+
+			}
+
+		}
+
+		return resultado;
+
+	}
+
+	@Override
+
+	public Integer somarValoresImpares(Integer limite) {
+
+		int resultado = limite;
+
+		for (int i = 0; i <= limite; i++) {
+
+			if (i % 2 != 0) {
+
+				resultado += i * limite;
+
+			}
+
+		}
+
+		return resultado;
+	}
+
+	@Override
+	public Integer somarValoresPrimos(Integer limite) {
+
+		int obter = limite;
+		for (int i = 1; i <= limite; i++) {
+			if (limite % i == 0) {
+				obter = i * limite;
+
+			}
+		}
+
+		return obter;
+	}
+
+	@Override
+	public Integer somarValoresPosicoes(int[] valores) {
+
+		int soma = valores[0];
+
+		for (int i = 0; i < valores.length; i++) {
+			if (valores[i] * 2 != 0) {
+				soma += valores[i];
+				System.out.print(" " + soma);
+			}
+
+		}
+		return soma;
+	}
+
+	@Override
+	public Integer somarValoresParesPosicoes(int[] valores) {
+
+		int soma = valores[0];
+
+		for (int i = 0; i < valores.length; i++) {
+			if (valores[i] % 2 == 0) {
+				soma += valores[i];
+				System.out.print(" " + soma);
+			}
+
+		}
+		return soma;
+	}
+
+	@Override
+	public Integer somarValoresImparesPosicoes(int[] valores) {
+
+		int soma = valores[0];
+		for (int i = 0; i < valores.length; i++) {
+			if (valores[i] % 2 != 0) {
+				soma += valores[i];
+				System.out.println(soma);
+			}
+
+		}
+		return soma;
+	}
+
+	@Override
+	public Integer somarValoresPrimosPosicoes(int[] valores) {
+
+		int soma = valores[2];
+
+		for (int i = 1; i < valores.length; i++) {
+			if (valores[i] % i != 0) {
+				soma = i * valores[i];
+
+			}
+		}
+
+		return soma;
+	}
+
+	@Override
+	public Integer somarValoresPosicoesParesMultiplosDe(Integer limite, Integer multiplo) {
+
+		int resultado = limite;
+
+		for (int i = 0; i <= limite; i++) {
+
+			if (i % 2 == 0) {
+
+				resultado += i * multiplo;
+
+				System.out.println(multiplo + " multiplo " + resultado);
+
+			}
+
+		}
+		return resultado;
+	}
+
+	@Override
+	public boolean multiploDeSete(int valor) {
+		if (valor % 7 == 0) {
+
+			return true;
+
+		} else {
+
+			return false;
+
+		}
+	}
+
+	@Override
+	public String parOuImpar(int valor) {
+
+		return valor % 2 == 0 ? "PAR" : "IMPAR";
+	}
+
+	@Override
+	public String parOuImparOuZero(int valor) {
+
+		if (valor == 0) {
+
+			return " ZERO";
+
+		} else if (valor % 2 == 0) {
+
+			return " PAR ";
+
+		} else {
+
+			return " IMPA ";
+
+		}
+	}
+
+	@Override
+	public int[] obterDobrosAteDobroInformado(int valor) {
+
+		List<Integer> obterDobrosAteDobroInformado = new ArrayList<>();
+
+		int[] obter = new int[valor];
+
+		while (valor <= 10) {
+
+			obterDobrosAteDobroInformado.add(valor * 2);
+
+			valor++;
+
+		}
+
+		System.out.println(obterDobrosAteDobroInformado);
+
+		return obter;
+	}
+
+	@Override
+	public int[] obterDobrosAteDez(int valor) {
+
+		ArrayList<Integer> resultado = new ArrayList<>();
+
+		while (valor <= 10) {
+			resultado.add(valor * 2);
+			valor++;
+		}
+
+		int[] arrayResultado = new int[resultado.size()];
+		for (int i = 0; i < resultado.size(); i++) {
+			arrayResultado[i] = resultado.get(i);
+
+		}
+
+		return arrayResultado;
+	}
+
+	@Override
+	public int[] obterDobrosAteMil(int valor) {
+
+		int obterDobros = valor;
+
+		int[] obter = new int[obterDobros];
+
+		do {
+
+			System.out.println(obterDobros);
+
+			obterDobros = obterDobros * 2;
+
+		} while (obterDobros < 1000);
+
+		System.out.println(obterDobros);
+
+		return obter;
+
+	}
+
+	@Override
+	public int[][] tabuada(int valor) {
+		int linhas = valor * 10;
+		int colunas = 3;
+		int resultado = 0;
+
+		int[][] tabela = new int[linhas][colunas];
+
+		for (int i = 1; i <= valor; i++) {
+			for (int j = 1; j <= 10; j++) {
+				tabela[resultado][0] = i;
+				tabela[resultado][1] = j;
+				tabela[resultado][2] = i * j;
+				resultado++;
+			}
+		}
+
+		for (int valorTabuada = 0; valorTabuada < linhas; valorTabuada++) {
+			System.out
+					.println(tabela[valorTabuada][0] + ", " + tabela[valorTabuada][1] + ", " + tabela[valorTabuada][2]);
+		}
+
+		return tabela;
+	}
+}

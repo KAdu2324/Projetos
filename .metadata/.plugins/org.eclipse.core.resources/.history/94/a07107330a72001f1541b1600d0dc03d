@@ -1,0 +1,394 @@
+package br.com.qwasolucoes.mentoria.implementacoes.banco_dados;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import br.com.qwasolucoes.mentoria.implementacoes.relacionamento.LerCsv;
+import br.com.qwasolucoes.mentoria.implementacoes.relacionamento.TranformarCsv;
+import br.com.qwasolucoes.mentoria.interfaces.banco_dados.BancoDados;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Contato;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Empresa;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Endereco;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Escolaridade;
+import br.com.qwasolucoes.mentoria.modelagem_dados.InstituicaoEnsino;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Pessoa;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Profissao;
+
+public class bancoDadosProvider implements BancoDados {
+	
+	public List<Pessoa> trazPessoas() {
+		String caminhoBase = "br/com/qwasolucoes/mentoria/modelagem_dados/";
+
+		List<Contato> contatos = LerCsv.lerArquivo(caminhoBase + "Contato.csv", TranformarCsv.CONTATO_MAPPER);
+	    List<Pessoa> pessoas = LerCsv.lerArquivo(caminhoBase + "Pessoa.csv", TranformarCsv.PESSOA_MAPPER);
+	    List<Empresa> empresas = LerCsv.lerArquivo(caminhoBase + "Empresa.csv", TranformarCsv.EMPRESA_MAPPER);
+	    List<Endereco> enderecos = LerCsv.lerArquivo(caminhoBase + "Endereco.csv", TranformarCsv.ENDERECO_MAPPER);
+	    List<Escolaridade> escolaridades = LerCsv.lerArquivo(caminhoBase + "Escolaridade.csv", TranformarCsv.ESCOLARIDADE_MAPPER);
+	    List<Profissao> profissoes = LerCsv.lerArquivo(caminhoBase + "Profissao.csv", TranformarCsv.PROFISSAO_MAPPER);
+	    List<InstituicaoEnsino> instituicoes = LerCsv.lerArquivo(caminhoBase + "InstituicaoEnsino.csv", TranformarCsv.INSTITUICAO_ENSINO_MAPPER);
+
+	    Map<String, List<Contato>> contatosPorCpf = new HashMap<String, List<Contato>>();
+	    Map<String, Empresa> empresasPorCpf = new HashMap<String, Empresa>();
+	    Map<String, List<Endereco>> enderecosPorCpf = new HashMap<String, List<Endereco>>();
+	    Map<String, List<Escolaridade>> escolaridadesPorCpf = new HashMap<String, List<Escolaridade>>();
+	    Map<String, Profissao> profissoesPorCodigo = new HashMap<String, Profissao>();
+	    Map<String, InstituicaoEnsino> instituicoesPorCodigo = new HashMap<String, InstituicaoEnsino>();
+
+	    for (Contato contato : contatos) {
+	        String cpf = contato.getCpf();
+	        if (!contatosPorCpf.containsKey(cpf)) {
+	            contatosPorCpf.put(cpf, new ArrayList<Contato>());
+	        }
+	        contatosPorCpf.get(cpf).add(contato);
+	    }
+
+	    for (Empresa empresa : empresas) {
+	        empresasPorCpf.put(empresa.getCpf(), empresa);
+	    }
+
+	    for (Endereco endereco : enderecos) {
+	        String cpf = endereco.getCpf();
+	        if (!enderecosPorCpf.containsKey(cpf)) {
+	            enderecosPorCpf.put(cpf, new ArrayList<Endereco>());
+	        }
+	        enderecosPorCpf.get(cpf).add(endereco);
+	    }
+
+	    for (Escolaridade escolaridade : escolaridades) {
+	        String cpf = escolaridade.getCpf();
+	        if (!escolaridadesPorCpf.containsKey(cpf)) {
+	            escolaridadesPorCpf.put(cpf, new ArrayList<Escolaridade>());
+	        }
+	        escolaridadesPorCpf.get(cpf).add(escolaridade);
+	    }
+
+	    for (Profissao profissao : profissoes) {
+	        profissoesPorCodigo.put(profissao.getCodigo(), profissao);
+	    }
+
+	    for (InstituicaoEnsino instituicao : instituicoes) {
+	        instituicoesPorCodigo.put(instituicao.getCodigo(), instituicao);
+	    }
+
+	    for (Pessoa pessoa : pessoas) {
+	        List<Contato> contatosPessoa = contatosPorCpf.get(pessoa.getCpf());
+	        if (contatosPessoa == null) {
+	            contatosPessoa = new ArrayList<Contato>();
+	        }
+	        pessoa.setContatos(contatosPessoa);
+
+	        Empresa empresa = empresasPorCpf.get(pessoa.getCpf());
+	        pessoa.setEmpresa(empresa);
+
+	        List<Endereco> enderecosPessoa = enderecosPorCpf.get(pessoa.getCpf());
+	        if (enderecosPessoa == null) {
+	            enderecosPessoa = new ArrayList<Endereco>();
+	        }
+	        pessoa.setEnderecos(enderecosPessoa);
+
+	        List<Escolaridade> escolaridadesPessoa = escolaridadesPorCpf.get(pessoa.getCpf());
+	        if (escolaridadesPessoa == null) {
+	            escolaridadesPessoa = new ArrayList<Escolaridade>();
+	        }
+	        List<Profissao> profissoesPessoa = new ArrayList<Profissao>();
+	        List<InstituicaoEnsino> instituicoesPessoa = new ArrayList<InstituicaoEnsino>();
+
+	        for (Escolaridade escolaridade : escolaridadesPessoa) {
+	            Profissao profissao = profissoesPorCodigo.get(escolaridade.getCodigo());
+	            if (profissao != null) {
+	                profissoesPessoa.add(profissao);
+	            }
+
+	            InstituicaoEnsino instituicao = instituicoesPorCodigo.get(escolaridade.getCodigo());
+	            if (instituicao != null) {
+	                instituicoesPessoa.add(instituicao);
+	            }
+	        }
+
+	        pessoa.setFormacoes(escolaridadesPessoa);
+	        pessoa.setProfissao(profissoesPessoa);
+	        pessoa.setInstituicao(instituicoesPessoa);
+	    }
+
+	    return pessoas;
+	}
+
+	
+	@Override
+	public void iniciarDDL() {
+		trazPessoas();
+		
+	}
+	@Override
+	public List<String> iniciarInserts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarCPFsDasPessoasMaioresIdade() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeSobrenomeDasPessoasPorAnorNascimento(Integer ano) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeSobrenomeDasPessoasPorEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorTipoResidencia(String tipoResidencia) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorTipoContato(String tipoContato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorBairro(String bairro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorNomeBairroContem(String valor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEstado(String estado) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorProfissao(String nomeProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorProfissaoNomeAreaAtuacaoContem(String valor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorSalarioBaseMaiorQue(BigDecimal salarioBase) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorSalarioBaseMaiorIgual(BigDecimal salarioBase) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorSalarioBaseEntre(BigDecimal salarioBaseInicio, BigDecimal salarioBaseFim) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEscolaridadeConcluida() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEscolaridadeAreaAtuacao(String areaAtuacao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEscolaridadeAnoTermino(Integer ano) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEscolaridadeQuantidadeSemestre(Integer semestre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorProfissaoAreaAtuacaoEscolaridadeConcluido(String areaAtuacao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorProfissaoAreaAtuacaoEscolaridadePorSemestre(String areaAtuacao,
+			Integer semestre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarPessoasPorEstadoCivilProfissaoAreaAtuacaoEscolaridadePorAreaAtuacao(String estadoCivil,
+			String areaAtuacaoProfissao, String areaAtuacaoEscolaridade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarEnderecoDasPessoasMaioresIdadeEEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarEnderecoPorTipoEndereco(String tipoEndereco) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeRuaEnderecoPorCidadePorPessoaSexoConjungeComAnoNascimento(String cidade,
+			String sexo, Integer anoNascimentoConjunge) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeDoConjungeDasPessoasMaioresIdadeEEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeDoConjungeDasPessoasPorEstadoCivil(List<String> estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeDoConjungeMaioresDeIdadeDasPessoasPorEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarContatoPorProfissaoAreaAtuacao(String areaAtuacao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarContatoPorProfissaoAreaAtuacaoEnderecoPorEstadoEBairro(String areaAtuacao,
+			String estado, String bairro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarContatoPorProfissaoAreaAtuacaoEnderecoPorEstadosEBairro(String areaAtuacao,
+			List<String> estados, String bairro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarContatoPorTipoContato(String tipoContato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarContatoPorTiposContato(List<String> tipoContato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarEmailPorPessoaAnoNascimentoProfissaoAreaAtuacaoEscolaridadePorAreaAtuacao(
+			Integer anoNasicmento, String areaAtuacaoProfissao, String areaAtuacaoEscolaridade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomeInstituicaoPorPorAreaAtuacao(String areaAtuacaoProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomePessoasPorProfissaoPorAreaAtuacao(String areaAtuacaoProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarNomePessoasPorEscolaridadePorAreaAtuacao(String areaAtuacaoEscolaridade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorProfissaoPorAreaAtuacao(String areaAtuacaoProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorEscolaridadePorAreaAtuacao(String areaAtuacaoEscolaridade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasMaioresIdade() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalDasPessoasPorEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorBairro(String bairro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorProfissao(String nomeProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorSalarioBaseMaiorIgual(BigDecimal salarioBase) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorEscolaridadeAreaAtuacao(String areaAtuacao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorEscolaridadeQuantidadeSemestre(Integer semestre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorProfissaoAreaAtuacaoEscolaridadePorSemestre(String areaAtuacao,
+			Integer semestre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalEmailPorPessoaAnoNascimentoProfissaoAreaAtuacaoEscolaridadePorAreaAtuacao(
+			Integer anoNasicmento, String areaAtuacaoProfissao, String areaAtuacaoEscolaridade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalConjugeDasPessoasMaioresIdadeEEstadoCivil(String estadoCivil) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalContatosPorTipoContato(String tipoContato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorEscolaridadeNaoConcluida() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalPessoasPorBairroPorProfissaoPorAreaAtuacao(String bairro,
+			String areaAtuacaoProfissao) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String criarSQLBuscarQuantidadeTotalContatoPorTiposContato(List<String> tipoContato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

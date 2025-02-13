@@ -1,0 +1,22 @@
+package PolimorfismoExercicio_novo2;
+
+public abstract class Moto implements Veiculo {
+	boolean ligado;
+	@Override
+	public String emissaoDeSom() {
+		// TODO Auto-generated method stub
+		return "Bololo ";
+	}
+
+	@Override
+	public boolean ligarVeiculo(boolean ligado) {
+		if(ligado == true) {
+		System.out.println("Veiculo ligado");
+		}else {
+			System.out.println("Veiculo desligado ");
+		}
+		return ligado;
+		
+	}
+
+}

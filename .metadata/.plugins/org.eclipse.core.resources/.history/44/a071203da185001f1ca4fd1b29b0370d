@@ -1,0 +1,40 @@
+
+import br.com.qwasolucoes.mentoria.modelagem_dados.Pessoa;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public interface PessoaRepository {
+    void save(Pessoa pessoa);
+    void update(String id, Pessoa pessoa);
+    void delete(String id);
+    Pessoa findById(String id);
+}
+
+class InMemoryPessoaRepository implements PessoaRepository {
+    private Map<String, Pessoa> database = new HashMap<>();
+
+    @Override
+    public void save(Pessoa pessoa) {
+        database.put(pessoa.getId(), pessoa);
+    }
+
+    @Override
+    public void update(String id, Pessoa pessoa) {
+        if (database.containsKey(id)) {
+            database.put(id, pessoa);
+        } else {
+            throw new IllegalArgumentException("Pessoa não encontrada.");
+        }
+    }
+
+    @Override
+    public void delete(String id) {
+        database.remove(id);
+    }
+
+    @Override
+    public Pessoa findById(String id) {
+        return database.get(id);
+    }
+}

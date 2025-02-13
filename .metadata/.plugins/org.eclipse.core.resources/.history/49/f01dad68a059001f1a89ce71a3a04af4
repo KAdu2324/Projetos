@@ -1,0 +1,97 @@
+package br.com.qwasolucoes.mentoria.implementacoes.relacionamento;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.qwasolucoes.mentoria.modelagem_dados.Contato;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Empresa;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Endereco;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Escolaridade;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Pessoa;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Profissao;
+
+public class Cenario {
+	public static void main(String[] args) {
+		test();
+//		buscarQuantidadeTotalContatoPorTiposContato();
+
+//		buscarQuantidadeTotalContatoPorTiposContato();
+//		buscarQuantidadeTotalContatoPorTiposContato();
+	}
+
+	public static void test() {
+		String caminhoBase = "br/com/qwasolucoes/mentoria/modelagem_dados/";
+
+		List<Contato> contatos = LerCsv.lerArquivo(caminhoBase + "Contato.csv", TranformarCsv.CONTATO_MAPPER);
+		List<Pessoa> pessoas = LerCsv.lerArquivo(caminhoBase + "Pessoa.csv", TranformarCsv.PESSOA_MAPPER);
+		List<Empresa> empresas = LerCsv.lerArquivo(caminhoBase + "Empresa.csv", TranformarCsv.EMPRESA_MAPPER);
+		List<Endereco> endereco = LerCsv.lerArquivo(caminhoBase + "Endereco.csv", TranformarCsv.ENDERECO_MAPPER);
+		List<Escolaridade> escolaridade = LerCsv.lerArquivo(caminhoBase + "Escolaridade.csv",
+				TranformarCsv.ESCOLARIDADE_MAPPER);
+		List<Profissao> profissao = LerCsv.lerArquivo(caminhoBase + "Profissao.csv", TranformarCsv.PROFISSAO_MAPPER);
+
+		List<Contato> contatosPessoa = new ArrayList<>();
+
+		for (Pessoa pessoaV : pessoas) {
+			List<Endereco> enderecoPessoa = new ArrayList<>();
+			List<Escolaridade> escolaridadePessoa = new ArrayList<>();
+			List<Profissao> profissaoPessoa = new ArrayList<>();
+			
+			
+			for (Contato contatosV : contatos) {
+				if (pessoaV.getCpf().equals(contatosV.getCpf())) {
+					contatosPessoa.add(contatosV);
+				}
+				pessoaV.setContatos(contatosPessoa);
+			}
+
+			for (Empresa empresaV : empresas) {
+				if (pessoaV.getCpf().equals(empresaV.getCpf())) {
+					pessoaV.setEmpresa(empresaV);
+				}
+			}
+			for (Endereco enderecoV : endereco) {
+				if (pessoaV.getCpf().equals(enderecoV.getCpf())) {
+					enderecoPessoa.add(enderecoV);
+				}
+				pessoaV.setEnderecos(enderecoPessoa);
+			}
+			 for (Escolaridade escolaridadeV : escolaridade) {
+			        if (pessoaV.getCpf().equals(escolaridadeV.getCpf())) {
+			            escolaridadePessoa.add(escolaridadeV);
+			        }
+			    }
+			    pessoaV.setFormacoes(escolaridadePessoa);
+
+			    for (Profissao profissaoV : profissao) {
+			        if (pessoaV.getCpf().equals(profissaoV.getCodigo())) {
+			            profissaoPessoa.add(profissaoV);
+			        }
+			    }
+			    pessoaV.setProfissao(profissaoPessoa);
+			}
+
+			System.out.println();
+			}
+
+	public static Integer buscarQuantidadeTotalContatosPorTipoContato() {
+		return null;
+	}
+
+	public static Integer buscarQuantidadeTotalPessoasPorEscolaridadeNaoConcluida() {
+		return null;
+	}
+
+	public static List<String> buscarCPFsDasPessoasMaioresIdade() {
+		return null;
+	}
+
+	public static Integer buscarQuantidadeTotalContatoPorTiposContato() {
+		RelacionamentoProvider relacionamento = new RelacionamentoProvider();
+		String caminhoBase = "br/com/qwasolucoes/mentoria/modelagem_dados/";
+		List<Contato> contatos = LerCsv.lerArquivo(relacionamento + "Contatos.csv", TranformarCsv.CONTATO_MAPPER);
+		System.out.println("Contatos: " + contatos);
+		System.out.println("Contatos: " + contatos);
+		return null;
+	}
+}

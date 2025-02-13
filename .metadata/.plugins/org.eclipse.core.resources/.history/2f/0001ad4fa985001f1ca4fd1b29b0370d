@@ -1,0 +1,8 @@
+package br.com.qwasolucoes.mentoria.implementacoes.web;
+
+public class Cenario {
+	
+	
+	 CadastroProvider relacionar = new CadastroProvider();
+	 
+}

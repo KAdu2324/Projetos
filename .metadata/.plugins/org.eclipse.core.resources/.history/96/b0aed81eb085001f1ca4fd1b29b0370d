@@ -1,0 +1,13 @@
+package br.com.qwasolucoes.mentoria.implementacoes.web;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class IndexController {
+	
+	@GetMapping("/lista")
+	public void getList(){
+		
+	}
+
+}

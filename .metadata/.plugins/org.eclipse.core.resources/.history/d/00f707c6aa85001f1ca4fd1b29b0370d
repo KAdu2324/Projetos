@@ -1,0 +1,37 @@
+package br.com.qwasolucoes.mentoria.implementacoes.web;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.qwasolucoes.mentoria.interfaces.web.CadastroController;
+import br.com.qwasolucoes.mentoria.modelagem_dados.Pessoa;
+
+public class CadastroProvider implements CadastroController{
+	
+	List<Pessoa> pessoas = new ArrayList<>();
+	
+	@Override
+	public void cadastrar(Pessoa pessoa) {
+		pessoa.setNome("Ana");
+		pessoas.add(pessoa);
+	}
+
+	@Override
+	public void atualizar(String id, Pessoa pessoa) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deletar(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buscarPorIdentificador(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

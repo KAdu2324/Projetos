@@ -1,0 +1,25 @@
+package br.com.qwasolucoes.mentoria.implementacoes.logica_programacao;
+
+public class Cenario {
+
+	public static void main(String[] args) {
+
+//		ex1();
+		ex2();
+		
+	}
+	
+	public static int[]ex2(){
+		LogicaProgramacaoProvider logicaProgramacaoProvider = new LogicaProgramacaoProvider();
+		int valor = 1500;
+	 		return logicaProgramacaoProvider.obterDobrosAteMil(valor);
+	}
+		
+	public static int[][] ex1(){
+		
+		LogicaProgramacaoProvider logicaProgramacaoProvider = new LogicaProgramacaoProvider();
+		int valor = 5;
+	 		return logicaProgramacaoProvider.tabuada(valor);
+	}
+
+}
